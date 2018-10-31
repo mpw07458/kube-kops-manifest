@@ -1,0 +1,11 @@
+json
+os
+sys
+subprocess
+socket
+python-kubernetes
+pprint
+logging
+datetime
+jinja2
+PyYAML

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+export ASSET_BUCKET={{ asset_bucket }} 
+export AWS_REGION={{ bucket_region }}
+kops create -f ./{{ manifest_name }} \
+--state {{ state_root }}

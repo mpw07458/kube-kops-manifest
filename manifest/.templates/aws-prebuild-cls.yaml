@@ -1,0 +1,28 @@
+:#!/usr/bin/env bash
+export KUBERNETES_VERSION=$KUBERNETES_VERSION
+export ASSET_BUCKET={{ asset_bucket }}
+export AWS_REGION=us-gov-west-1
+export NAME={{ cluster_name }}
+export KOPS_STATE_STORE={{ state_root }}
+kops create cluster {{ cluster_name }} \
+	--cloud aws \
+        --dns private \
+	--node-count {{ node_min }} \
+	--admin-access '10.0.0.0/8' \
+	--ssh-access '10.0.0.0/8' \
+	--zones="us-gov-west-1a,us-gov-west-1b,us-gov-west-1c" \
+	--master-zones "us-gov-west-1a,us-gov-west-1b,us-gov-west-1c" \
+	--ssh-public-key {{ ssh_key_file }} \
+	--node-size {{ node_type }} \
+	--master-size {{ master_type }} \
+	--api-loadbalancer-type internal \
+	--vpc {{ network_id }} \
+        --kubernetes-version https://s3-website-{{ bucket_region }}.amazonaws.com/{{ asset_bucket }}/kubernetes/release/$KUBERNETES_VERSION \
+	--topology private \
+        --associate-public-ip=false \
+        --dns-zone {{ cluster_name }} \
+	--networking canal \
+	--image {{ node_image }}  \
+	--master-volume-size 128 \
+	--dry-run \
+	-o yaml > $NAME.yaml

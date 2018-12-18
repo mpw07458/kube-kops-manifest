@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+export AWS_REGION={{ bucket_region }}
+kops delete cluster \
+  --name {{ cluster_name }} \
+  --state {{ state_root }} \
+  --yes

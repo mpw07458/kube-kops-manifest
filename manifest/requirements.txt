@@ -1,4 +1,5 @@
-json
+io
+shutil
 os
 sys
 subprocess
@@ -6,6 +7,14 @@ socket
 python-kubernetes
 pprint
 logging
+pathlib
 datetime
+logging
 jinja2
 PyYAML
+hvac
+requests>=2.7.0
+idna<2.8,>=2.5
+chardet<3.1.0,>=3.0.2
+certifi>=2017.4.17
+urllib3<1.25,>=1.21.1

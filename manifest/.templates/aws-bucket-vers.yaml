@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+export AWS_REGION={{ bucket_region }}
+aws s3api put-bucket-versioning \
+--bucket {{ bucket_name }} \
+ --versioning-configuration \
+ Status=Enabled

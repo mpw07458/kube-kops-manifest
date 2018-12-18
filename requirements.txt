@@ -1,0 +1,4 @@
+PyYAML
+jinja2
+python-kubernetes
+Manifest

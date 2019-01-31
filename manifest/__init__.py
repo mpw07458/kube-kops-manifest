@@ -14,7 +14,7 @@ import socket
 import urllib3
 from jinja2 import Environment, FileSystemLoader
 
-_vault_uri = os.environ['VAULT_ADDR'] #'http://vault.devs.ns2.priv'
+_vault_uri = os.environ['VAULT_ADDR'] 
 _data_path = "Manifest/.data_files/"
 _template_path = "Manifest/.templates/"
 _script_path = "Manifest/.scripts/"

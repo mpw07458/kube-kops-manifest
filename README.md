@@ -68,7 +68,7 @@ $ cp -pR helm /usr/local/bin/.
 ### Clone the kube-kops-manifest from Github and move it to the environment you  want to install the k8s cluster to.  You will have to SFTP it up.
 
 ```
-$ git clone git@git.devs.ns2.priv:ns2-k8s/k8s-kops-manifest.git
+$ git clone << repo >>
 ```
 > Once you have the k8s-kops-manifest folder in the right workstation, change to it.
 ```
@@ -77,7 +77,8 @@ $ cd k8s-kops-manifest
 > Update the "vault.env" file and ensure proper settings exist for the cluster you are deploying.  The KUBERNETES_CLUSTER and the KOPS_STATE_BUCKET will be modified when working on the difference environments.
 ```
 $ vi vault.env
-
+```
+```
 export OFFLINE_INSTALL=1
 export KUBERNETES_VERSION="v1.10.11"
 export KOPS_VERSION="1.11.0-alpha.1"
@@ -108,8 +109,6 @@ $ cp k8s_qa_key2.pub k8s_qa_key.pub
 ```
 > k8s_qa_key.pub is the key that is used by Kubernetes, we set it in the *-feed.yaml
 
-> If you want to modify the Chef Runlist, you can edit it in the 
-chef-template.yaml and chef-template-nofips.yaml
 
 ## Ensure Hashicorp Vault is working and connecting correctly
 
@@ -164,7 +163,7 @@ $ source vault.env
 or
 ```
 $ export AWS_REGION=<< cluster name>>
-$ export KOPS_STATE_STORE=s3://<< ss3 store>>
+$ export KOPS_STATE_STORE=s3://<< s3 store>>
 ```
 > then these commands
 ```
@@ -274,39 +273,39 @@ ssh_key_file: ~/.ssh/id_rsa.pub
 manifest_name: Manifest/.scripts/<<cluster-name>>-manifest.yaml
 http_proxy: XXX.XXX.XXX.XXX
 http_proxy_exclude: << exclude list>>
-private_1a_cidr: 10.23.6.0/23
-private_1a_id: subnet-XXXXXXXX2
+private_1a_cidr: XXX.XXX.XXX.XXX/XX
+private_1a_id: subnet-XXXXXXXX
 private_1a_egress: nat-XXXXXXXX
-private_1a_name: us-gov-west-1a
+private_1a_name: < zone >
 private_1a_type: Private
-private_1a_zone: us-gov-west-1a
-private_1b_cidr: 10.23.8.0/23
+private_1a_zone: << zone >>
+private_1b_cidr: XXX.XXX.XXX.XXX/XX
 private_1b_id: subnet-XXXXXXXX
 private_1b_egress: nat-XXXXXXXX
-private_1b_name: us-gov-west-1b
+private_1b_name: < zone >
 private_1b_type: Private
-private_1b_zone: us-gov-west-1b
-private_1c_cidr: 10.23.10.0/23
-private_1c_id: subnet-7beaea3d
-private_1c_egress: nat-025282436e67bec6b
-private_1c_name: us-gov-west-1c
+private_1b_zone: < zone >
+private_1c_cidr: XXX.XXX.XXX.XXX/XX
+private_1c_id: subnet-XXXXXXXX
+private_1c_egress: nat-XXXXXXXX
+private_1c_name: < zone >
 private_1c_type: Private
-private_1c_zone: us-gov-west-1c
-utility_1a-cidr: 10.23.0.0/23
+private_1c_zone: < zone >
+utility_1a-cidr: XXX.XXX.XXX.XXX/XX
 utility_1a_id: subnet-XXXXXXXX
 utility_1a_name: utility-us-<< az >>
 utility_1a_type: Utility
 utility_1a_zone: << zone >>
-utility_1b_cidr: 10.23.2.0/23
-utility_1b_id: subnet-43fb5e27
+utility_1b_cidr: XXX.XXX.XXX.XXX/XX
+utility_1b_id: subnet-XXXXXXXX
 utility_1b_name: utility-<< az>>
 utility_1b_type: Utility
 utility_1b_zone: us-gov-west-1b
-utility_1c_cidr: 10.23.4.0/23
+utility_1c_cidr: XXX.XXX.XXX.XXX/XX
 utility_1c_id: subnet-XXXXXXXX
 utility_1c_name: utility-<< az>>
 utility_1c_type: Utility
-utility_1c_zone: us-gov-west-1c
+utility_1c_zone:<< zone >>
 
 ```
 > Example template or templated manifest:
@@ -346,7 +345,7 @@ spec:
       name: b
     - instanceGroup: master-us-gov-west-1c
       name: c
-    image: docker.artifactory.devs.ns2.priv/etcd-amd64:3.2.24
+    image: {{artifactory_uri}}/etcd-amd64:3.2.24
     name: main
     version: 3.2.24
   - etcdMembers:
@@ -356,7 +355,7 @@ spec:
       name: b
     - instanceGroup: master-us-gov-west-1c
       name: c
-    image: docker.artifactory.devs.ns2.priv/etcd-amd64:3.2.24
+    image: {{artifactory_uri}}/etcd-amd64:3.2.24
     name: events
     version: 3.2.24
   fileAssets:

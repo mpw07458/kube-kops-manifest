@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # noinspection PyPep8Naming
+#import pdb
 import logging
 import os
 import shutil
@@ -25,7 +26,8 @@ class Manifest:
                  state_shell_file, vers_template_file, vers_shell_file, ssh_template_file, ssh_shell_file,
                  upd_template_file, upd_shell_file, val_template_file, val_shell_file, kops_template_file,
                  kops_shell_file, kops_del_template_file, kops_del_shell_file, chef_template_file,
-                 chef_manifest_file, prebuild_template_file, prebuild_shell_file, ca_cert_file, client_key_file):
+                 chef_manifest_file, chef_nofips_template_file, chef_nofips_manifest_file,
+                 prebuild_template_file, prebuild_shell_file, ca_cert_file, client_key_file):
         self._start_logger(self)        
         self._remove_tmp_manifest()
         self._create_tmp_manifest()
@@ -38,7 +40,7 @@ class Manifest:
                 self._ca_cert_file = self._vault_client.read('secret/chef_ca_cert')['data']['value']
                 self._client_key_file = self._vault_client.read('secret/chef_client_key')['data']['value']
             except (AssertionError, Exception) as e:
-                logging.debug('Vault Connection failed' + e)
+                logging.debug("Error: %s. Occurred ", e)
                 self._ca_cert_file = ''
                 self._client_key_file = ''
                 pass
@@ -89,6 +91,8 @@ class Manifest:
             self._create_manifest(prebuild_template_file, self._newDataFeed, prebuild_shell_file)
             self._create_manifest(chef_template_file, self._newDataFeed, chef_manifest_file)        
             self._cascade_manifest(chef_manifest_file)
+            self._create_manifest(chef_nofips_template_file, self._newDataFeed, chef_nofips_manifest_file)
+            self._cascade_manifest(chef_nofips_manifest_file)
             self._create_manifest(manifest_template_file, self._newDataFeed, new_manifest_file)
             self._create_manifest(kops_template_file, self._newDataFeed, kops_shell_file)
             self._create_manifest(state_template_file, self._newDataFeed, state_shell_file)
@@ -99,13 +103,13 @@ class Manifest:
             pprint("******* Manifest creation complete *******: ")
             pprint("******* Manifest run*******: ")
             # run the manifests
-            # self._run_manifest(self, prebuild_shell_file)
-            # self._run_manifest(self, state_shell_file)
-            # self._run_manifest(self, vers_shell_file)
-            # self._run_manifest(self, kops_shell_file)
-            # self._run_manifest(self, ssh_shell_file)
-            # self._run_manifest(self, upd_shell_file)
-            # self._run_manifest(self, val_shell_file)
+            self._run_manifest(self, prebuild_shell_file)
+            self._run_manifest(self, state_shell_file)
+            self._run_manifest(self, vers_shell_file)
+            self._run_manifest(self, kops_shell_file)
+            self._run_manifest(self, ssh_shell_file)
+            self._run_manifest(self, upd_shell_file)
+            self._run_manifest(self, val_shell_file)
             pprint("******* Manifest run complete *******: ")
         elif sys.argv[1] == "--delete":
             self._manifest_key_dict = self._k8s_yaml_to_dict_helper(_data_path + manifest_data_file)
@@ -114,7 +118,7 @@ class Manifest:
             self._create_manifest(kops_del_template_file, self._newDataFeed, kops_del_shell_file)
             pprint("******* Manifest creation complete *******: ")
             pprint("******* Manifest run*******: ")
-            # self._run_manifest(self, kops_del_shell_file)
+            self._run_manifest(self, kops_del_shell_file)
             print("******* Manifest run complete *******: ")
         pass
     
@@ -145,6 +149,7 @@ class Manifest:
         :return:
         """
         home = os.getenv("HOME")
+       # pdb.set_trace()
         vault_addr = os.getenv('VAULT_ADDR', vault_uri)
         logging.debug('Connecting to Vault at %s with token from %s', vault_uri, f"{home}/.vault-token")
         with open(f"{home}/.vault-token", 'r') as vtoken:

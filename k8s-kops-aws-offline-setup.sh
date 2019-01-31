@@ -2,18 +2,18 @@
 ## Setup vars
 ## Setup vars
 source vault_env
-export KUBERNETES_VERSION=$(curl -fsSL --retry 5 "https://dl.k8s.io/release/stable.txt")
-export KUBERNETES_VERSION=v1.10.11
-export KOPS_VERSION=$(curl -fsSL --retry 5 "https://api.github.com/repos/kubernetes/kops/releases/latest" | grep 'tag_name' | cut -d\" -f4)
+## export KUBERNETES_VERSION=$(curl -fsSL --retry 5 "https://dl.k8s.io/release/stable.txt")
+export KUBERNETES_VERSION=v1.11.6
+## export KOPS_VERSION=$(curl -fsSL --retry 5 "https://api.github.com/repos/kubernetes/kops/releases/latest" | grep 'tag_name' | cut -d\" -f4)
 export KOPS_VERSION=1.11.0-alpha.1
 export ASSET_BUCKET="offline-kops"
-export ASSET_PREFIX=""
-export AWS_REGION="us-gov-west-1"
+# export ASSET_PREFIX=""
+# export AWS_REGION="us-gov-west-1"
 
 # Please note that this filename of cni asset may change with kubernetes version
 export CNI_FILENAME=cni-amd64-0799f5732f2a11b329d9e3d51b9c8f2e3759f2ff.tar.gz
-export KOPS_BASE_URL=https://s3-website-us-west-1.amazonaws.com/$ASSET_BUCKET/kops/$KOPS_VERSION/
-export CNI_VERSION_URL=https://s3-website-us-west-1.amazonaws.com/$ASSET_BUCKET/kubernetes/network-plugins/$CNI_FILENAME
+export KOPS_BASE_URL=https://s3-website-us-gov-west-1.amazonaws.com/$ASSET_BUCKET/kops/$KOPS_VERSION/
+export CNI_VERSION_URL=https://s3-website-us-gov-west-1.amazonaws.com/$ASSET_BUCKET/kubernetes/network-plugins/$CNI_FILENAME
 
 ## Download assets
 KUBERNETES_ASSETS=(
@@ -62,7 +62,7 @@ fi
 
 aws configure set default.s3.multipart_threshold 1024MB
 
-aws s3api create-bucket --bucket $ASSET_BUCKET --create-bucket-configuration LocationConstraint=$AWS_REGION
+#aws s3api create-bucket --bucket $ASSET_BUCKET --create-bucket-configuration LocationConstraint=$AWS_REGION
 for dir in "kubernetes" "kops"; do
   aws s3 sync "$dir" "s3://$ASSET_BUCKET/$ASSET_PREFIX$dir"
 done

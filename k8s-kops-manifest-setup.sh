@@ -1,12 +1,6 @@
 #!/usr/bin/env bash
 ## Setup vars
-source vault_env
-export KUBERNETES_VERSION="v1.13.0"
-export KOPS_VERSION="1.10.0"
-export ASSET_BUCKET="kops-offline"
-export ASSET_PREFIX=""
-export KOPS_STATE_BUCKET="dev-kube"
-
+source vault.env
 # Please note that this filename of cni asset may change with kubernetes version
 export CNI_FILENAME=cni-amd64-0799f5732f2a11b329d9e3d51b9c8f2e3759f2ff.tar.gz
 
@@ -38,6 +32,4 @@ cd ../..
 export PYTHONUSERBASE=$HOME
 export CURRENTDIR=`pwd`
 source $CURRENTDIR/venv/bin/activate
-export AWS_REGION=us-west-1
-export KOPS_STATE_STORE=s3://$KOPS_STATE_BUCKET
 source vault.env

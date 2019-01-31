@@ -1,0 +1,41 @@
+apiVersion: kops/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: 2018-10-12T01:54:48Z
+  labels:
+    kops.k8s.io/cluster: ns2devcluster2.k8s.local
+  name: nofips-nodes
+spec:
+  additionalUserData:
+  - content: "#!/bin/bash -xev\n# Do some chef pre-work\n/bin/mkdir -p /etc/chef\n/bin/mkdir
+      -p /var/lib/chef\n/bin/mkdir -p /var/log/chef\n\n\ncd /etc/chef/\n\n# Install
+      chef\nrpm -Uvh https://packages.chef.io/files/stable/chef/12.21.31/el/7/chef-12.21.31-1.el7.x86_64.rpm\n\n#
+      Create first-boot.json\ncat > \"/etc/chef/first-boot.json\" << EOF\n{\n  \"run_list\"
+      :[\n  \"role[default]\"\n  ]\n}\nEOF\n\n# Create client validation_key\n\ncat
+      > \"/etc/chef/i831737.pem\" << EOF\n-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA19ZXMZVMTY/IwMX08aIP5Cb6soeX0JELqKI2+Ye1eBoWqx7B\nA2PVsjLTgqToZa7uHaAkWm/ynwq+Zltk9qrPuhIvffCiZD5MI1qUknhXCA2QuTA6\nA49UB4eOvtry+1PYfbjGLYXmUVFwNGJof6ag50HybHyacJ5OwQprN4+EAIU61WmP\nzczUjjN0szFcCT7wFD2dS/Jnuz5IDzHoK8UOlFP+/a9sPmvgrl8aNrvVkFxo4qUA\nNfY+wzrYxZKFWCaBIq87KhZffm4SF0AIZftx+MTKPrglQ9UZb7hjta4jjazSiQca\nG52H7seqyaitCBA9viTo2pmF1kUfkKfnkimohwIDAQABAoIBAQChVdq/eXYb1Aqf\n7lj19cojJO/oW2qjwIgSeY7WXxbKu9WN++MTAaFPHqbz1QjSWTwscPQ7lcqqD4Hb\nSR3jNDMqR0WwwhrhC6AmHSNJiSKlJl6zztTOrGiHaFDPYSKXs0j0URXyGVDcIB/b\nSGQMZyWHN8haR5m57Nu5eGxEj8aAC7c65D5wOcOorFeavhZXjfvKSpU+7hSxedLz\n5BLzCjH5jfZDX7AnoTkl4R1/sahd87cqSmLMt0hc1D5d0O5QRSC94iEz36ARbOIa\nqFRm1ao1boFfp3FIEn7xVM+ywu69y6lREPO6QS+5mU5+AFQ2TsYj/euj3lU7UNu9\nRAysRHwhAoGBAPAxQ+CsnNFNM7n1XYKEG8p/3bIB3IqPsrhgJbbfs3/ANpfZKdMt\nv7QXVGm7Pd0tO1vtA94NKmOf/lTw3n1lCUSU21oLAuQV5yH7iBtcT2i8lLdENAji\nslZh+VmKRy3ZJkRU3mYcFpbk7axSxWEsCG9fv3er1H12DfEOotCUZl49AoGBAOYK\nvgTPFEZhwQooNyI2X29IS8VdAZcFjRW/RgQ8F7gSV/lqWU6HP57UfCeQILin4P9s\nuiC4xA2znFwasL+jv4XTEIYkBpsnk4YnKR76xzm8JxeQ43c/Zj4BqmHRgVTk3KOV\nc3LI4baZjgggEAnKv7rfY4q3hzdw4qI3Wu26F/ITAoGAf9ppfD3Fl6/VmeXe6aty\ns57OnoNZJrSI+JXNXYPEI3toU/n3xn5yreVBPKq7qnD6SNtoFJnDd5Zhpks002Cl\nx0jJXivAVTLHfpJKh+3iIylGrCr028n4Df1G4n+1ldUiBnt6irXm3Fltni3M/QWY\nU9iOrZ/ckw/1KdyVlBt6Ri0CgYAtyS2Q33Z1m7dEQkTW9mOATq9mFODgIia2kV9q\nMFu4M053QgeMbbbn8frUFQeuORu7OvTA1oWPBJS2cEmFmx3fkObVDA6Uiwf9x4WT\nuO42O5C8TAY6EdBTvxkeZwiK0RJpLLHRwtHJ+j4et+L5T/VhSF0Tmvu6uSkiiEn8\nzvE9KQKBgAG7BryNb2fDbY2hE1P02geZISeDO/XMZ8Crw+0I6R/64PpCwTqDTHz8\nCWQ0hKtYMNeGRYGFp94njhAzqh7RkXf9GrHWLteYusL6ZnIvj704KXlwrzKDy5J4\ngBF9Bc+MHMd5GK9ybqc2jD14AG6QfGBgsUAkB4hzIev2Nk0oTnHY\n-----END
+      RSA PRIVATE KEY-----\nEOF\n\n# Create ca-cert \n\ncat > \"/etc/chef/ca-cert.pem\"
+      << EOF\n-----BEGIN CERTIFICATE-----\nMIIDlTCCAn2gAwIBAgIQfb34Z5Q+uo5IbVoByC1xOzANBgkqhkiG9w0BAQUFADBd\nMRQwEgYKCZImiZPyLGQBGRYEcHJpdjETMBEGCgmSJomT8ixkARkWA25zMjEUMBIG\nCgmSJomT8ixkARkWBGRldnMxGjAYBgNVBAMTEWRldnMtQzAyRFNBVTAxLUNBMB4X\nDTE3MDUwNjAzMzQzOFoXDTIyMDUwNjAzNDQzOFowXTEUMBIGCgmSJomT8ixkARkW\nBHByaXYxEzARBgoJkiaJk/IsZAEZFgNuczIxFDASBgoJkiaJk/IsZAEZFgRkZXZz\nMRowGAYDVQQDExFkZXZzLUMwMkRTQVUwMS1DQTCCASIwDQYJKoZIhvcNAQEBBQAD\nggEPADCCAQoCggEBAK1yY02ghUrivjihy49B+9KV4Ccq7hX/9ewEr4jCy0M2bhKl\nPFBPIm56VuCZMJ3tnEXGlz5VSjRSEGf4zhbwZWvH+Z7cGIWtXrTxy9nU8V9sToob\nZco8CAHl4OBfAfr14QPFG0KpGWBEqiQr7MjWKxKa5dgRjc6sCLQ3o6MOHJEs9dI+\nmCAZtrFRk5n7mRTGthDiua6dPlxponR9uM5LkZ2IHJMpZkjbU2JmyWxf7vxigOrd\n7UUbzn5V+5rNZXsA7Jz3mDPCqtrhkxhAUy3j6xzXr419GcmmaEF1+PzCbxkFovlm\n6R4UIKr+F0ds7FA+wzzp5wE7GXN3tYy5PVHKv0ECAwEAAaNRME8wCwYDVR0PBAQD\nAgGGMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFHrEkzPgg83+/cBNXTSbjPmc\naSenMBAGCSsGAQQBgjcVAQQDAgEAMA0GCSqGSIb3DQEBBQUAA4IBAQBd/nApPLYN\nr6JQRne4rHEmsdOC93OxCWhqT5xattEhcgUhfeFKgMhH9HNS8tcT09P5er3R2+iT\n+k/C2DTgh7obgbQdsoqPhZeYYrTzVgV/cUiawLi4jGuO5KSlXektjnBwdB6CJdY8\n7rb8+3lBHXigjFZxABiFNgx7d8lkkOjgkvH/+CJtJtVNCUfuvH9J7MxYfdRliyJR\ntNp0hH1YVSUmMW+nMhg5X4QPy/pys2gzEMVf5IbMG7DRftW/ZzM56kYDaSIsnD25\nHJ8sS27uRO6uK4+aYRfIDLO3h10p0rjzbO0vftAKbgO0aG784ILA2SS5TR6+cBvt\nilhgTGlkwUZg\n-----END
+      CERTIFICATE-----\nEOF\n\nENV=dev_cst-k8s-nofips\n\nIP_ADDRESS=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)\n\nNODE_NAME=`hostname
+      -s`\nDOMAIN=devw.ns2.priv\nFQDN=$NODE_NAME.$DOMAIN\nhostname ${NODE_NAME}.${DOMAIN}\necho
+      \"$IP_ADDRESS $FQDN $NODE_NAME\" >> /etc/hosts\n# Create client.rb\n\ncat >
+      /etc/chef/client.rb << EOF\nlog_location    'STDOUT' \nchef_server_url \"https://chef.devs.ns2.priv//organizations/development\"\nvalidation_client_name
+      \"i831737\" \nvalidation_key \"/etc/chef/i831737.pem\"\nnode_name  \"${NODE_NAME}\"
+      \nssl_ca_file \"/etc/chef/ca-cert.pem\" \nssl_verify_mode :verify_none\nhttp_proxy
+      \"http://proxy:80\"\nhttps_proxy \"http://proxy:80\"\nno_proxy \"chef,repo,gems,satellite,s3-us-gov-west-1.amazonaws.com,localhost,localhost.localdomain,*.devs.ns2.priv,*.devw.ns2.priv,chef.devs.ns2.priv,127.0.0.1,trend.devs.ns2.priv\"\nEOF\n\nsudo
+      chef-client -j /etc/chef/first-boot.json -E $ENV\n"
+    name: chef-boot.sh
+    type: text/x-shellscript
+  associatePublicIp: false
+  image: ami-c75237a6
+  machineType: m5.xlarge
+  maxSize: 3
+  minSize: 3
+  nodeLabels:
+    kops.k8s.io/instancegroup: nofips-nodes
+  role: Node
+  taints:
+  - fips=disabled:NoExecute
+  subnets:
+  - us-gov-west-1a
+  - us-gov-west-1b
+  - us-gov-west-1c

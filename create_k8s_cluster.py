@@ -22,6 +22,8 @@ kops_del_template_file = "aws-delete-kops-cls.yaml"
 kops_del_shell_file = "delete-k8s-cluster.sh"
 chef_manifest_file = "chef-template.yaml"
 chef_shell_file = "chef-manifest.yaml"
+chef_nofips_manifest_file = "chef-template-nofips.yaml"
+chef_nofips_shell_file = "chef-manifest-nofips.yaml"
 pre_build_manifest_file = "aws-prebuild-cls.yaml"
 pre_build_shell_file = "aws-pre-build-cls.sh"
 ca_cert_file = "chef-ca-cert.yaml"
@@ -40,7 +42,8 @@ def run_all_manifests():
              state_shell_file, vers_template_file, vers_shell_file, ssh_template_file, ssh_shell_file,
              upd_template_file, upd_shell_file, val_template_file, val_shell_file, kops_template_file,
              kops_shell_file, kops_del_template_file, kops_del_shell_file, chef_manifest_file, chef_shell_file,
-             pre_build_manifest_file, pre_build_shell_file, ca_cert_file, client_key_file)
+             chef_nofips_manifest_file, chef_nofips_shell_file, pre_build_manifest_file, pre_build_shell_file, 
+             ca_cert_file, client_key_file)
     print("***************************************************************************************************")
     print("Manifest Configuration Complete")
     print("***************************************************************************************************")

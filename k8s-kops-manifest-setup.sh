@@ -4,8 +4,8 @@ source vault.env
 # Please note that this filename of cni asset may change with kubernetes version
 export CNI_FILENAME=cni-amd64-0799f5732f2a11b329d9e3d51b9c8f2e3759f2ff.tar.gz
 
-export KOPS_BASE_URL=https://s3-website-us-gov-west-1.amazonaws.com/$ASSET_BUCKET/kops/$KOPS_VERSION/
-export CNI_VERSION_URL=https://s3-website-us-gov-west-1.amazonaws.com/$ASSET_BUCKET/kubernetes/network-plugins/$CNI_FILENAME
+export KOPS_BASE_URL=https://s3-us--west-1.amazonaws.com/$ASSET_BUCKET/kops/$KOPS_VERSION/
+export CNI_VERSION_URL=https://s3-us-west-1.amazonaws.com/$ASSET_BUCKET/kubernetes/network-plugins/$CNI_FILENAME
 cd wheel
 dzdo python3.6 pip-18.1-py2.py3-none-any.whl/pip install --no-index virtualenv-16.1.0-py2.py3-none-any.whl
 cd ..

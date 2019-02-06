@@ -77,8 +77,6 @@ $ cd k8s-kops-manifest
 > Update the "vault.env" file and ensure proper settings exist for the cluster you are deploying.  The KUBERNETES_CLUSTER and the KOPS_STATE_BUCKET will be modified when working on the difference environments.
 ```
 $ vi vault.env
-```
-```
 export OFFLINE_INSTALL=1
 export KUBERNETES_VERSION="v1.10.11"
 export KOPS_VERSION="1.11.0-alpha.1"

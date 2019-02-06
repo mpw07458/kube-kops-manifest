@@ -27,42 +27,39 @@ $ cd source-addons/kubectl-client
 $ tar zxvf kubectl.tar.gz
 $ chmod +x kubectl
 $ cp -pR kubectl /usr/local/bin/.
-
-Verify the kubectl command comes back with Usage and Available Commands
 ```
+> Verify the kubectl command comes back with Usage and Available Commands
 > KOPS
 ```
 $ cd ../kops-client
 $ tar zxvf kops.tar.gz
 $ chmod +x kops
 $ cp -pR kops /usr/local/bin/.
-
-Verify the kops command comes back with Usage and Available Commands
 ```
+> Verify the kops command comes back with Usage and Available Commands
 > PYTHON 3.6
 ```
 $ vi /etc/yum.conf
-Change gpgcheck=1 to gpgcheck=0
-
+```
+> Change gpgcheck=1 to gpgcheck=0
+```
 $ cd ../python36
 $ rpm -ivh *.rpm
-
-Verify that python36 can be executed and you get back 3.6.6
 ```
+> Verify that python36 can be executed and you get back 3.6.6
 > DOCKER
 ```
 $ cd ../docker1806
 $ rpm -ivh *.rpm
-
-Verify that docker version is 18.06.1-ce, ‘docker -v’
 ```
+> Verify that docker version is 18.06.1-ce, ‘docker -v’
 > HELM
 ```
 $ cd ../helm
 $ tar zxvf helm.tar.gz 
 $ chmod +x helm
 $ cp -pR helm /usr/local/bin/.
-
+```
 ## QUICK START
 ---
 ### Clone the kube-kops-manifest from Github and move it to the environment you  want to install the k8s cluster to.  You will have to SFTP it up.

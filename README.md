@@ -5,25 +5,15 @@
 ## Pre-requisites
 ---
 
-### Setup Steps for AWS
-```
-1. Create s3 bucket: <ENV>-kube
-This is where the k8s state store will be saved.
-
-2. In the VPC Update the DNS hostnames, disable it
-
-3. Create the workload and utility k8s subnets, ensure that these subnets are associated to the right route table, utility will be using the Edge Load-Balancer Route Table - AZ1
 ```
 ### Before running the scripts below you must install KOPS, Kubectl, Docker and Python 3.6
 ```
 
-$ wget https://<artifactory uri>/artifactory/list/ns2-custom-generic/offline-kops/source-addons.tar.gz
-
-$ tar zxvf source-addons.tar
+$ tar zxvf addons.tar
 ```
 > KUBECTL
 ```
-$ cd source-addons/kubectl-client
+$ cd addons/kubectl-client
 $ tar zxvf kubectl.tar.gz
 $ chmod +x kubectl
 $ cp -pR kubectl /usr/local/bin/.
@@ -114,16 +104,6 @@ $ source vault.env
 $ vault login -method=ldap username=$USER
 $ ls -a ~/.vault-token
 $ cat ~/.vault-token
-```
-> Print the Chef client key and chef ca cert
-```
-$ vault kv get secret/chef_client_key
-$ vault kv get secret/chef_ca_cert
-```
-> If the above step fails to print ca cert and client key you must add them to vault
-```
-$ vault write secret/chef_client_key value=@chef_client.pem
-$ vault write secret/chef_ca_cert value=@chef_key.pem
 ```
 
 > Make sure that the format is correct, without modifying the PEM file.  Uploading from the GUI to Vault will cause error and the formatting with be broken.  User the Vault CLI from the workstation.
@@ -243,7 +223,7 @@ state_base: s3://<< bucket name>>/<< cluster name>>
 additional_sg_base: sg-XXXXXXXX
 additional_sg_ssh: sg-XXXXXXXX
 master_internal_name: api.internal.<< cluster name >>
-master_public_name: api.devsmscluster.k8s.local
+master_public_name: api.<< cluster name >>
 master_zone: <<zones>>
 network_cidr: XXX.XXX.XXX.XXX/XX
 non_masq_cidr: XXX.XXX.XXX.XXX/XX
@@ -334,21 +314,21 @@ spec:
     excludes: {{ http_proxy_exclude }}
   etcdClusters:
   - etcdMembers:
-    - instanceGroup: master-us-gov-west-1a
+    - instanceGroup: master-<< region az >>
       name: a
-    - instanceGroup: master-us-gov-west-1b
+    - instanceGroup: master-<< region az >>
       name: b
-    - instanceGroup: master-us-gov-west-1c
+    - instanceGroup: master-<< region az >>
       name: c
     image: {{artifactory_uri}}/etcd-amd64:3.2.24
     name: main
     version: 3.2.24
   - etcdMembers:
-    - instanceGroup: master-us-gov-west-1a
+    - instanceGroup: master-<< region az >>
       name: a
-    - instanceGroup: master-us-gov-west-1b
+    - instanceGroup: master-<< region az >>
       name: b
-    - instanceGroup: master-us-gov-west-1c
+    - instanceGroup: master-<< region az >>
       name: c
     image: {{artifactory_uri}}/etcd-amd64:3.2.24
     name: events
@@ -466,26 +446,23 @@ metadata:
   creationTimestamp: null
   labels:
     kops.k8s.io/cluster: {{ cluster_name }}
-  name: master-us-gov-west-1a
+  name: master-<< region az >>
 spec:
   additionalUserData:
-  - name: {{ chef_script_name }}
-    type: text/x-shellscript
-    content: {% include 'chef-manifest.yaml' %}
   associatePublicIp: false
   image: {{ master_image }}
   machineType: {{ master_type }}
   maxSize: {{ master_max }}
   minSize: {{ master_min }}
   nodeLabels:
-    kops.k8s.io/instancegroup: master-us-gov-west-1a
+    kops.k8s.io/instancegroup: master-<< region az >>
   cloudLabels:
     type: k8s
     subtype: master
   role: Master
   rootVolumeSize: 128
   subnets:
-  - us-gov-west-1a
+  - << region az >>
 
 ---
 
@@ -495,26 +472,22 @@ metadata:
   creationTimestamp: null
   labels:
     kops.k8s.io/cluster: {{ cluster_name }}
-  name: master-us-gov-west-1b
+  name: master-<< region az >>
 spec:
-  additionalUserData:
-  - name: {{ chef_script_name }}
-    type: text/x-shellscript
-    content: {% include 'chef-manifest.yaml' %}
   associatePublicIp: false
   image: {{ master_image }}
   machineType: {{ master_type }}
   maxSize: {{ master_max }}
   minSize: {{ master_min }}
   nodeLabels:
-    kops.k8s.io/instancegroup: master-us-gov-west-1b
+    kops.k8s.io/instancegroup: master-<< region az >>
   cloudLabels:
     type: k8s
     subtype: master
   role: Master
   rootVolumeSize: 128
   subnets:
-  - us-gov-west-1b
+  - << region az >>
 
 ---
 
@@ -524,26 +497,22 @@ metadata:
   creationTimestamp: null
   labels:
     kops.k8s.io/cluster: {{ cluster_name }}
-  name: master-us-gov-west-1c
+  name: master-<< region az >>
 spec:
-  additionalUserData:
-  - name: {{ chef_script_name }}
-    type: text/x-shellscript
-    content: {% include 'chef-manifest.yaml' %}
   associatePublicIp: false
   image: {{ master_image }}
   machineType: {{ master_type }}
   maxSize: {{ master_max }}
   minSize: {{ master_min }}
   nodeLabels:
-    kops.k8s.io/instancegroup: master-us-gov-west-1c
+    kops.k8s.io/instancegroup: master-<< region az >>
   cloudLabels:
     type: k8s
     subtype: master
   role: Master
   rootVolumeSize: 128
   subnets:
-  - us-gov-west-1c
+  - << region az >>
 
 ---
 
@@ -555,10 +524,6 @@ metadata:
     kops.k8s.io/cluster: {{ cluster_name }}
   name: nodes
 spec:
-  additionalUserData:
-  - name: {{ chef_script_name }}
-    type: text/x-shellscript
-    content: {% include 'chef-manifest.yaml' %}
   associatePublicIp: false
   image: {{ node_image }}
   machineType: {{ node_type }}
@@ -572,9 +537,9 @@ spec:
   role: Node
   rootVolumeType: standard
   subnets:
-  - us-gov-west-1a
-  - us-gov-west-1b
-  - us-gov-west-1c
+  - << region az >>
+  - << region az >>
+  - << region az >>
 ```
 
 ```

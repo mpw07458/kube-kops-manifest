@@ -1,7 +1,7 @@
 :#!/usr/bin/env bash
 export KUBERNETES_VERSION=$KUBERNETES_VERSION
 export ASSET_BUCKET={{ asset_bucket }}
-export AWS_REGION=us-gov-west-1
+export AWS_REGION=us-west-1
 export NAME={{ cluster_name }}
 export KOPS_STATE_STORE={{ state_root }}
 kops create cluster {{ cluster_name }} \
@@ -10,8 +10,8 @@ kops create cluster {{ cluster_name }} \
 	--node-count {{ node_min }} \
 	--admin-access '10.0.0.0/8' \
 	--ssh-access '10.0.0.0/8' \
-	--zones="us-gov-west-1a,us-gov-west-1b,us-gov-west-1c" \
-	--master-zones "us-gov-west-1a,us-gov-west-1b,us-gov-west-1c" \
+	--zones="us-west-1a,us-west-1b,us-west-1c" \
+	--master-zones "us-west-1a,us-west-1b,us-west-1c" \
 	--ssh-public-key {{ ssh_key_file }} \
 	--node-size {{ node_type }} \
 	--master-size {{ master_type }} \
